@@ -1,0 +1,54 @@
+﻿@page "/music"
+@inject IMusicServ MusicServ
+    <div class="row">
+        <div class="col-m-6">
+            <a href="/add-music" class=" btn btn-outline-primary" role="button">
+                Add Music
+            </a>
+        </div>
+    </div>
+@if(MusicServ.Musics == null || MusicServ.Musics.Count==0)
+            {
+                <span>Loading ...</span>
+            }
+else
+            {
+                <ul class="list-unstyled">
+                    @foreach (var music in MusicServ.Musics)
+                    {
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-4 p-2">
+                                    <div class="card">
+                                        <div class="d-flex justify-content-center p-2">
+                                            <img src="@music.ImgURL" alt="@music.Title" class="card-img" />
+                                        </div>
+                                        <div class="card-body">
+                                            <a href="/music/@music.MusicId">
+                                                <h3 class="card-title">Music name : @music.Title</h3>
+                                            </a>
+                                            <h5 class="card-text">Author: @music.Author</h5>
+                                            <p class="card-text">Lyrics: @music.Lyric.Substring(0,100)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </ul>
+                <div class="row">
+                    <div class="col-m-6">
+                        <a href="/add-music" class=" btn btn-outline-primary" role="button">
+                            Add Music
+                        </a>
+                    </div>
+                </div>
+            }
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await MusicServ.GetMusics();
+    }
+}

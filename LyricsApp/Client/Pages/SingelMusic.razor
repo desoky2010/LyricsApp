@@ -1,0 +1,58 @@
+﻿@page "/music/{id:int}"
+@inject IMusicServ MusicServ
+
+@if (Music ==null)
+{
+    <span>@message</span>
+}
+else
+{
+
+    <ul class="list-unstyled">
+       
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 p-2">
+                        <div class="card">
+                            <div class="d-flex justify-content-center p-2">
+                                <video poster="@Music.ImgURL"  controls="controls" width="300" height="200">
+                                    <source  src="@Music.VideoUrl"  />
+                                </video> 
+                            </div>
+                            <div class="card-body">                               
+                                    <h3 class="card-title">Music name : @Music.Title</h3>
+                                <h5 class="card-text">Author: @Music.Author</h5>
+                                <p class="card-text">Lyrics: @Music.Lyric</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    </ul>
+   
+}
+
+@code {
+    private Music Music = null;
+    private string message;
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task  OnParametersSetAsync()
+    {
+        message = "Loading ...";
+        var response = await MusicServ.GetMusicById(id);
+
+        if(!response.Success)
+        {
+            message = response.Mesage;
+        }
+        else
+        {
+            Music = response.Data;
+        }
+    }
+
+}
